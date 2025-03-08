@@ -1,0 +1,6 @@
+{
+    "admin": {
+        "password": "SuperSecret123",
+        "profile": "Default Admin Profile"
+    }
+}

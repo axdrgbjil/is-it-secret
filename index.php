@@ -1,19 +1,14 @@
 <?php
 session_start();
-$db = new SQLite3('db.sqlite');
+$users = json_decode(file_get_contents('users.json'), true);
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $query = $db->prepare("SELECT * FROM users WHERE username = :username AND password = :password");
-    $query->bindValue(':username', $username);
-    $query->bindValue(':password', $password);
-    $result = $query->execute()->fetchArray();
-
-    if ($result) {
+    if (isset($users[$username]) && $users[$username]["password"] === $password) {
         $_SESSION['username'] = $username;
-        setcookie("SESSION_ID", session_id(), time() + 3600, "/", "", false, false); // Insecure Cookie
+        setcookie("SESSION_ID", session_id(), time() + 3600, "/", "", false, false);
         header("Location: dashboard.php");
         exit;
     } else {
@@ -28,4 +23,5 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <input type="text" name="username" placeholder="Username" required><br>
     <input type="password" name="password" placeholder="Password" required><br>
     <button type="submit">Login</button>
+    <p><a href="register.php">Register Here</a></p>
 </form>
